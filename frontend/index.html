@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stranger Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>🔗 Stranger Chat</h2>
+  <div id="chat"></div>
+  <input id="msg" type="text" placeholder="Type a message..." />
+  <button onclick="sendMsg()">Send</button>
+
+  <script>
+    const ws = new WebSocket("ws://localhost:8000/ws");
+    const chatBox = document.getElementById("chat");
+
+    ws.onmessage = (event) => {
+      const msg = document.createElement("p");
+      msg.textContent = event.data;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    };
+
+    function sendMsg() {
+      const input = document.getElementById("msg");
+      if (input.value.trim() !== "") {
+        ws.send(input.value);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
